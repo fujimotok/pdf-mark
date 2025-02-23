@@ -70,8 +70,8 @@ function renderPage(num) {
   document.getElementById('page-num').textContent = num;
 
   // And pass it to panzoom
-  var element = document.getElementById('pdf-viewer')
-  panzoom(element, {
+  const element = document.getElementById('pdf-viewer')
+  var instance = panzoom(element, {
     maxZoom: 10, 		/* 拡大時の上限 */
     minZoom: 1, 		/* 縮小時の下限 */
     initialX: 0, 		/* コンテンツ表示の初期横位置 */
@@ -79,6 +79,11 @@ function renderPage(num) {
     initialZoom: 1, 	/* コンテンツ表示時の初期倍率 */
     bounds: true, 		/* 表示領域外へ出ないようにする場合はtrue */
     boundsPadding: 0.05 	/* bounds: true の時の表示余白 */
+  });
+
+  document.getElementById('reset').addEventListener('click', function() {
+    instance.zoomAbs(0,0,1);
+    instance.moveTo(0, 0);
   });
 }
 
@@ -107,3 +112,4 @@ document.getElementById('menu').addEventListener('click', function() {
     element.classList.add('hidden');
   }
 });
+
