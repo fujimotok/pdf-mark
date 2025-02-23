@@ -2,7 +2,7 @@ let pdfDoc = null,
     pageNum = 1,
     pageRendering = false,
     pageNumPending = null,
-    scale = 1.0,
+    scale = 4.0,
     canvas = document.createElement('canvas'),
     ctx = canvas.getContext('2d');
 
@@ -49,6 +49,8 @@ function renderPage(num) {
     const viewport = page.getViewport({ scale: scale });
     canvas.height = viewport.height;
     canvas.width = viewport.width;
+    canvas.style.height = (viewport.height / scale) + "px";
+    canvas.style.width = (viewport.width / scale) + "px";
 
     const renderContext = {
       canvasContext: ctx,
@@ -66,6 +68,18 @@ function renderPage(num) {
   });
 
   document.getElementById('page-num').textContent = num;
+
+  // And pass it to panzoom
+  var element = document.getElementById('pdf-container')
+  panzoom(element, {
+    maxZoom: 10, 		/* 拡大時の上限 */
+    minZoom: 1, 		/* 縮小時の下限 */
+    initialX: 0, 		/* コンテンツ表示の初期横位置 */
+    initialY: 0, 		/* コンテンツ表示の初期縦位置 */
+    initialZoom: 1, 	/* コンテンツ表示時の初期倍率 */
+    bounds: true, 		/* 表示領域外へ出ないようにする場合はtrue */
+    boundsPadding: 0.05 	/* bounds: true の時の表示余白 */
+  });
 }
 
 // ページ送りボタンのイベントリスナー

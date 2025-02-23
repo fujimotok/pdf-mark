@@ -13,7 +13,9 @@
       <div id="pdf-load">
         <input type="file" id="file-input" accept="application/pdf">
       </div>
-      <div id="pdf-viewer"></div>
+      <div id="pdf-container">
+        <div id="pdf-viewer"></div>
+      </div>
       <div id="pdf-controls">
         <button id="prev-page">←</button>
         <span id="page-num"></span> / <span id="page-count"></span>
@@ -25,6 +27,8 @@
     <!-- PDF.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js"></script>
+    <!-- panzoom.js CDN -->
+    <script src='https://unpkg.com/panzoom@9.4.0/dist/panzoom.min.js'></script>
     <!-- SimpleMDE JS CDN -->
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="index.js"></script>
