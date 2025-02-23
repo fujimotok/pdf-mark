@@ -99,3 +99,11 @@ document.getElementById('next-page').addEventListener('click', function() {
   renderPage(pageNum);
 });
 
+document.getElementById('menu').addEventListener('click', function() {
+  var element = document.getElementById('toggle-element');
+  if (element.classList.contains('hidden')) {
+    element.classList.remove('hidden');
+  } else {
+    element.classList.add('hidden');
+  }
+});
