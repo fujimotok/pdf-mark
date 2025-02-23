@@ -10,18 +10,24 @@
   </head>
   <body>
     <div id="container">
-      <div id="pdf-load">
+      <div id="pdf-viewer"></div>
+      <div id="bottom-sheet">
+        <div id="pdf-controls">
+          <div id="menu-controls">
+            <button id="menu">X</button>
+          </div>
+          <div id="page-controls">
+            <button id="prev-page">←</button>
+            <span id="page-num"></span> / <span id="page-count"></span>
+            <button id="next-page">→</button>
+          </div>
+          <div id="zoom-controls">
+            <button id="reset">100%</button>
+          </div>
+        </div>
         <input type="file" id="file-input" accept="application/pdf">
+        <textarea id="markdown-editor"></textarea>
       </div>
-      <div id="pdf-container">
-        <div id="pdf-viewer"></div>
-      </div>
-      <div id="pdf-controls">
-        <button id="prev-page">←</button>
-        <span id="page-num"></span> / <span id="page-count"></span>
-        <button id="next-page">→</button>
-      </div>
-      <textarea id="markdown-editor"></textarea>
     </div>
 
     <!-- PDF.js CDN -->

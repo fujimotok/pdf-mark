@@ -70,7 +70,7 @@ function renderPage(num) {
   document.getElementById('page-num').textContent = num;
 
   // And pass it to panzoom
-  var element = document.getElementById('pdf-container')
+  var element = document.getElementById('pdf-viewer')
   panzoom(element, {
     maxZoom: 10, 		/* 拡大時の上限 */
     minZoom: 1, 		/* 縮小時の下限 */

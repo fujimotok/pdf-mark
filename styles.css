@@ -17,25 +17,13 @@ body, html {
     width: 100%;
 }
 
+#file-input {
+    margin: 4px 0px;
+    width: 100%;
+}
+
 .CodeMirror, .CodeMirror-scroll {
     max-height: 300px;
-}
-
-#pdf-load {
-    position: fixed;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-sizing: border-box;
-    margin: 0px 0px 4px 0px;
-    padding: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-
-#pdf-load > input {
-    width: 100%;
 }
 
 #pdf-viewer {
@@ -46,11 +34,17 @@ body, html {
 }
 
 #pdf-controls {
+    width: 100%;
+    margin: 4px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#bottom-sheet {
     position: fixed;
     bottom: 0;
     z-index: 100;
     width: 100%;
-    text-align: center;
     background-color: rgba(255, 255, 255, 0.8);
     box-sizing: border-box;
     margin: 4px 0px 0px 0px;
