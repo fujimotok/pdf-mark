@@ -118,12 +118,11 @@ document.getElementById('menu').addEventListener('click', function() {
 const overlayElement = document.getElementById('bottom-sheet');
 
 function eventHandler(event) {
-  event.preventDefault();
   event.stopPropagation();
 }
 
 // オーバーレイ要素でのイベントを無効にする
 const events = ['wheel', 'keydown', 'mousedown', 'dblclick', 'touchstart', 'touchmove', 'touchend']
 events.map(eventType => {
-  overlayElement.addEventListener(eventType, eventHandler, {capture: true});
+  overlayElement.addEventListener(eventType, eventHandler);
 });
