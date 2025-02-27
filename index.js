@@ -81,14 +81,16 @@ function renderPage(num) {
     boundsPadding: 0.05 	/* bounds: true の時の表示余白 */
   });
 
-  document.getElementById('reset').addEventListener('click', function() {
+  document.getElementById('reset').addEventListener('click', function(event) {
+    event.preventDefault();
     instance.zoomAbs(0,0,1);
     instance.moveTo(0, 0);
   });
 }
 
 // ページ送りボタンのイベントリスナー
-document.getElementById('prev-page').addEventListener('click', function() {
+document.getElementById('prev-page').addEventListener('click', function(event) {
+  event.preventDefault();
   if (pageNum <= 1) {
     return;
   }
@@ -96,7 +98,8 @@ document.getElementById('prev-page').addEventListener('click', function() {
   renderPage(pageNum);
 });
 
-document.getElementById('next-page').addEventListener('click', function() {
+document.getElementById('next-page').addEventListener('click', function(event) {
+  event.preventDefault();
   if (pageNum >= pdfDoc.numPages) {
     return;
   }
