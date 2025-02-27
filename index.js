@@ -83,6 +83,8 @@ function renderPage(num) {
 
   document.getElementById('reset').addEventListener('click', function(event) {
     event.preventDefault();
+    simplemde.codemirror.focus();
+
     instance.zoomAbs(0,0,1);
     instance.moveTo(0, 0);
   });
@@ -91,6 +93,8 @@ function renderPage(num) {
 // ページ送りボタンのイベントリスナー
 document.getElementById('prev-page').addEventListener('click', function(event) {
   event.preventDefault();
+  simplemde.codemirror.focus();
+
   if (pageNum <= 1) {
     return;
   }
@@ -100,6 +104,8 @@ document.getElementById('prev-page').addEventListener('click', function(event) {
 
 document.getElementById('next-page').addEventListener('click', function(event) {
   event.preventDefault();
+  simplemde.codemirror.focus();
+
   if (pageNum >= pdfDoc.numPages) {
     return;
   }
