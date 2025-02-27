@@ -73,7 +73,7 @@ function renderPage(num) {
   const element = document.getElementById('pdf-viewer')
   var instance = panzoom(element, {
     maxZoom: 10, 		/* 拡大時の上限 */
-    minZoom: 1, 		/* 縮小時の下限 */
+    minZoom: 0.5, 		/* 縮小時の下限 */
     initialX: 0, 		/* コンテンツ表示の初期横位置 */
     initialY: 0, 		/* コンテンツ表示の初期縦位置 */
     initialZoom: 1, 	/* コンテンツ表示時の初期倍率 */
