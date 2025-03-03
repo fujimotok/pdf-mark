@@ -11,7 +11,7 @@ let canvas = document.createElement('canvas');
 // init element 
 // -----------------------------------------------------------------------------
 document.getElementById('pdf-viewer').appendChild(canvas);
-document.getElementById('page-num').textContent = 0;
+document.getElementById('page-num').value = 0;
 document.getElementById('page-count').textContent = 0;
 
 const panZoom = panzoom(
@@ -69,7 +69,7 @@ function renderPage(num) {
     });
   });
 
-  document.getElementById('page-num').textContent = num;
+  document.getElementById('page-num').value = num;
 }
 
 
@@ -86,10 +86,18 @@ document.getElementById('file-input').addEventListener('change', function(event)
       pdfjsLib.getDocument(uint8Array).promise.then(pdf => {
         pdfDoc = pdf;
         document.getElementById('page-count').textContent = pdfDoc.numPages;
+        document.getElementById('page-num').max = pdfDoc.numPages;
         renderPage(pageNum);
       });
     };
     reader.readAsArrayBuffer(file);
+  }
+});
+
+document.getElementById('page-num').addEventListener('keydown', function(event) {
+  if (event.key === "Enter") {
+    pageNum = Number(document.getElementById('page-num').value)
+    renderPage(pageNum)
   }
 });
 

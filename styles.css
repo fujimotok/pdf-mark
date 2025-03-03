@@ -28,6 +28,10 @@ body, html {
     width: 100%;
 }
 
+#page-num {
+    width: 8ch;
+}
+
 .CodeMirror, .CodeMirror-scroll {
     min-height: 30vh;
     max-height: 30vh;
