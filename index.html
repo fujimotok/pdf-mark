@@ -10,33 +10,20 @@
   </head>
   <body>
     <div id="container">
-      <div id="pdf-viewer"></div>
+      <iframe id="pdf-viewer" width="100%" height="100%" style="border: none;"></iframe>
       <div id="bottom-sheet">
         <div id="pdf-controls">
           <div id="menu-controls">
             <button id="menu">Ξ</button>
           </div>
-          <div id="page-controls">
-            <button id="prev-page">←</button>
-            <input id="page-num" type="number" min="1" max="9999"></input> / <span id="page-count"></span>
-            <button id="next-page">→</button>
-          </div>
-          <div id="zoom-controls">
-            <button id="reset">100%</button>
-          </div>
+          <input type="file" id="file-input" accept="application/pdf">
         </div>
         <div id="toggle-element">
-          <input type="file" id="file-input" accept="application/pdf">
           <textarea id="markdown-editor"></textarea>
         </div>
       </div>
     </div>
 
-    <!-- PDF.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js"></script>
-    <!-- panzoom.js CDN -->
-    <script src='https://unpkg.com/panzoom@9.4.0/dist/panzoom.min.js'></script>
     <!-- SimpleMDE JS CDN -->
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="index.js"></script>

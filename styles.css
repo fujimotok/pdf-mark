@@ -24,12 +24,8 @@ body, html {
 }
 
 #file-input {
-    margin: 4px 0px;
+    margin: 0px 4px;
     width: 100%;
-}
-
-#page-num {
-    width: 8ch;
 }
 
 .CodeMirror, .CodeMirror-scroll {
@@ -39,7 +35,6 @@ body, html {
 
 #pdf-viewer {
     width: 100%;
-    padding: 8px;
     display: flex;
     justify-content: center;
     box-sizing: border-box;
@@ -59,6 +54,6 @@ body, html {
     width: 100%;
     background-color: rgba(255, 255, 255);
     box-sizing: border-box;
-    padding: 10px;
+    padding: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
