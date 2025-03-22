@@ -9,10 +9,16 @@ const simplemde = new SimpleMDE({
   element: document.getElementById("markdown-editor"),
   toolbar: [
     {
-      name: "redText",
+      name: "open",
+      action: open,
+      className: "fa fa-folder",
+      title: "open pdf",
+    },
+    {
+      name: "download",
       action: download,
       className: "fa fa-download",
-      title: "download",
+      title: "download markdown",
     }, "|",
     "heading", "unordered-list", "ordered-list", "|",
     "quote", "code", "table", "horizontal-rule", "|",
@@ -33,6 +39,24 @@ const simplemde = new SimpleMDE({
 // -----------------------------------------------------------------------------
 // def func
 // -----------------------------------------------------------------------------
+function open(editor) {
+  // Generate a file-open link and launch it
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".pdf";
+
+  input.onchange = function(event) {
+    const file = event.target.files[0];
+    if (file && file.type === 'application/pdf') {
+      const fileUrl = URL.createObjectURL(file);
+      const viewer = document.getElementById('pdf-viewer');
+      viewer.src = `pdfjs-5.0.375-dist/web/viewer.html?file=${encodeURIComponent(fileUrl)}`;
+    }
+  };
+
+  input.click();
+}
+
 function download(editor) {
   // Get the contents of the editor and convert it to a Blob
   const content = editor.value();
@@ -48,15 +72,6 @@ function download(editor) {
 // -----------------------------------------------------------------------------
 // add event
 // -----------------------------------------------------------------------------
-document.getElementById('file-input').addEventListener('change', function(event) {
-  const file = event.target.files[0];
-  if (file && file.type === 'application/pdf') {
-    const fileUrl = URL.createObjectURL(file); // ローカルファイルのBlob URLを生成
-    const viewer = document.getElementById('pdf-viewer');
-    viewer.src = `pdfjs-5.0.375-dist/web/viewer.html?file=${encodeURIComponent(fileUrl)}`;
-  }
-});
-
 document.getElementById('menu').addEventListener('click', function() {
   const element = document.getElementById('toggle-element');
   if (element.classList.contains('hidden')) {
