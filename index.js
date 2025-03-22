@@ -7,6 +7,18 @@
 // -----------------------------------------------------------------------------
 const simplemde = new SimpleMDE({
   element: document.getElementById("markdown-editor"),
+  toolbar: [
+    {
+      name: "redText",
+      action: download,
+      className: "fa fa-download",
+      title: "download",
+    }, "|",
+    "heading", "unordered-list", "ordered-list", "|",
+    "quote", "code", "table", "horizontal-rule", "|",
+    "bold", "italic", "|",
+    "link", "image"
+  ],
   autosave: {
     enabled: true,
     uniqueId: "PDF-Mark",
@@ -21,7 +33,17 @@ const simplemde = new SimpleMDE({
 // -----------------------------------------------------------------------------
 // def func
 // -----------------------------------------------------------------------------
-
+function download(editor) {
+  // Get the contents of the editor and convert it to a Blob
+  const content = editor.value();
+  const blob = new Blob([content], { type: "text/plain" });
+  
+  // Generate a download link and launch it
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "pdf-mark.md";
+  link.click();
+}
 
 // -----------------------------------------------------------------------------
 // add event
@@ -36,7 +58,7 @@ document.getElementById('file-input').addEventListener('change', function(event)
 });
 
 document.getElementById('menu').addEventListener('click', function() {
-  var element = document.getElementById('toggle-element');
+  const element = document.getElementById('toggle-element');
   if (element.classList.contains('hidden')) {
     element.classList.remove('hidden');
   } else {
