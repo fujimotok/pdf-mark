@@ -27,7 +27,7 @@ const simplemde = new SimpleMDE({
     uniqueId: "PDF-Mark",
     delay: 1000,
   },
-  placeholder: "Memo",
+  placeholder: "Note",
   spellChecker: false,
   status: false
 });
@@ -76,6 +76,10 @@ customSelect.addEventListener("change", function () {
   }
 });
 toolbarElement.appendChild(customSelect);
+
+const viewer = document.getElementById('pdf-viewer');
+viewer.src = `pdfjs-5.0.375-dist/web/viewer.html?file=`;
+
 
 // -----------------------------------------------------------------------------
 // def func
