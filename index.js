@@ -72,7 +72,7 @@ function download(editor) {
 // -----------------------------------------------------------------------------
 // add event
 // -----------------------------------------------------------------------------
-document.getElementById('menu').addEventListener('click', function() {
+document.getElementById('knob').addEventListener('click', function() {
   const element = document.getElementById('toggle-element');
   if (element.classList.contains('hidden')) {
     element.classList.remove('hidden');
