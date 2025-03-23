@@ -52,6 +52,12 @@ body, html {
     border-radius: 15px;   
 }
 
+#smde-select {
+    font-size: 1em;
+    padding: 2px;
+    margin: 0 0 0 4px;
+}
+
 #bottom-sheet {
     position: fixed;
     bottom: 0;

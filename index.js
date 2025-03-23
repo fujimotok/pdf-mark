@@ -20,10 +20,7 @@ const simplemde = new SimpleMDE({
       className: "fa fa-download",
       title: "download markdown",
     }, "|",
-    "heading", "unordered-list", "ordered-list", "|",
-    "quote", "code", "table", "horizontal-rule", "|",
-    "bold", "italic", "|",
-    "link", "image"
+    "heading", "unordered-list", "ordered-list",
   ],
   autosave: {
     enabled: true,
@@ -35,6 +32,50 @@ const simplemde = new SimpleMDE({
   status: false
 });
 
+// カスタムツールバーに select を埋め込む
+var toolbarElement = document.querySelector(".editor-toolbar");
+var customSelect = document.createElement("select");
+customSelect.id = "smde-select";
+customSelect.innerHTML = `
+    <option value="bold">Bold</option>
+    <option value="italic">Italic</option>
+    <option value="link">Link</option>
+    <option value="image">Image</option>
+    <option value="quort">Quort</option>
+    <option value="code">Code</option>
+    <option value="table">Table</option>
+    <option value="rule">Rule</option>
+    <option value="">Cancel</option>
+`;
+customSelect.addEventListener("change", function () {
+  switch (this.value) {
+  case "bold":
+    simplemde.toggleBold();
+    break;
+  case "italic":
+    simplemde.toggleItalic();
+    break;
+  case "link":
+    simplemde.drawLink();
+    break;
+  case "image":
+    simplemde.drawImage();
+    break;
+  case "quort":
+    simplemde.toggleBlockquote();
+    break;
+  case "code":
+    simplemde.toggleCodeBlock();
+    break;
+  case "table":
+    simplemde.drawTable();
+    break;
+  case "rule":
+    simplemde.drawHorizontalRule();
+    break;
+  }
+});
+toolbarElement.appendChild(customSelect);
 
 // -----------------------------------------------------------------------------
 // def func
