@@ -14,13 +14,39 @@ const simplemde = new SimpleMDE({
       className: "fa fa-folder",
       title: "open pdf",
     },
+    "|",
     {
       name: "download",
       action: download,
       className: "fa fa-download",
       title: "download markdown",
-    }, "|",
-    "heading", "unordered-list", "ordered-list",
+    },
+    {
+      name: "clear",
+      action: clear,
+      className: "fa fa-trash",
+      title: "clear markdown",
+    },
+    {
+      name: "copy",
+      action: copy,
+      className: "fa fa-clipboard",
+      title: "copy markdown",
+    },
+    "|",
+    {
+      name: "undo",
+      action: (e) => { e.codemirror.execCommand("undo"); },
+      className: "fa fa-rotate-left",
+      title: "undo",
+    },
+    {
+      name: "redo",
+      action: (e) => { e.codemirror.execCommand("redo"); },
+      className: "fa fa-rotate-right",
+      title: "redo",
+    },
+    "|", "heading", "unordered-list", "ordered-list",
   ],
   autosave: {
     enabled: true,
@@ -104,7 +130,7 @@ function open(editor) {
 
 function download(editor) {
   // Get the contents of the editor and convert it to a Blob
-  const content = editor.value();
+  const copntent = editor.value();
   const blob = new Blob([content], { type: "text/plain" });
   
   // Generate a download link and launch it
@@ -112,6 +138,17 @@ function download(editor) {
   link.href = URL.createObjectURL(blob);
   link.download = "pdf-mark.md";
   link.click();
+}
+
+function clear(editor) {
+  editor.value("");
+  editor.codemirror.save();
+}
+
+function copy(editor) {
+  editor.codemirror.save();
+  const text = editor.value();
+  navigator.clipboard.writeText(text);
 }
 
 // -----------------------------------------------------------------------------
