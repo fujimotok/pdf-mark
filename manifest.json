@@ -1,7 +1,7 @@
 {
   "name": "PDF Viewer with Markdown Notes",
   "short_name": "PDF-Mark",
-  "start_url": "/",
+  "start_url": "/pdf-mark/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
