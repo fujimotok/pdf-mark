@@ -1,9 +1,9 @@
 const CACHE_NAME = 'pdf-mark-cache-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/index.js',
-  '/styles.css',
+  '/pdf-mark/',
+  '/pdf-mark/index.html',
+  '/pdf-mark/index.js',
+  '/pdf-mark/styles.css',
   'https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js',
