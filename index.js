@@ -78,6 +78,7 @@ var toolbarElement = document.querySelector(".editor-toolbar");
 var customSelect = document.createElement("select");
 customSelect.id = "smde-select";
 customSelect.innerHTML = `
+    <option value="">format</option>
     <option value="bold">Bold</option>
     <option value="italic">Italic</option>
     <option value="link">Link</option>
@@ -86,7 +87,6 @@ customSelect.innerHTML = `
     <option value="code">Code</option>
     <option value="table">Table</option>
     <option value="rule">Rule</option>
-    <option value="">Cancel</option>
 `;
 customSelect.addEventListener("change", function () {
   switch (this.value) {
@@ -115,6 +115,8 @@ customSelect.addEventListener("change", function () {
     simplemde.drawHorizontalRule();
     break;
   }
+
+  this.value = "";
 });
 toolbarElement.appendChild(customSelect);
 
