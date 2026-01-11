@@ -20,6 +20,8 @@ if ('serviceWorker' in navigator) {
 // -----------------------------------------------------------------------------
 // init element 
 // -----------------------------------------------------------------------------
+
+// SimpleMDE -------------------------------------------------------------------
 const simplemde = new SimpleMDE({
   element: document.getElementById("markdown-editor"),
   toolbar: [
@@ -72,8 +74,9 @@ const simplemde = new SimpleMDE({
   spellChecker: false,
   status: false
 });
+// SimpleMDE -------------------------------------------------------------------
 
-// カスタムツールバーに select を埋め込む
+// SimpleMDE toolbar -----------------------------------------------------------
 var toolbarElement = document.querySelector(".editor-toolbar");
 var customSelect = document.createElement("select");
 customSelect.id = "smde-select";
@@ -119,10 +122,30 @@ customSelect.addEventListener("change", function () {
   this.value = "";
 });
 toolbarElement.appendChild(customSelect);
+// SimpleMDE toolbar -----------------------------------------------------------
 
+// PDF.js viewer.html ----------------------------------------------------------
 const viewer = document.getElementById('pdf-viewer');
 viewer.src = `pdfjs-5.0.375-dist/web/viewer.html?file=`;
 
+viewer.onload = function() {
+  const iframeWindow = viewer.contentWindow;
+  const iframeDocument = viewer.contentDocument;
+
+  if (!iframeWindow || !iframeDocument) {
+    console.error("iframe content not accessible.");
+    return;
+  }
+
+  // Wait for PDF.js application to initialize
+  const checkPdfjsReady = setInterval(() => {
+    if (iframeWindow.PDFViewerApplication && iframeWindow.PDFViewerApplication.pdfViewer) {
+      clearInterval(checkPdfjsReady);
+      injectCustomScript(iframeWindow, iframeDocument);
+    }
+  }, 100);
+};
+// PDF.js viewer.html ----------------------------------------------------------
 
 // -----------------------------------------------------------------------------
 // def func
@@ -192,3 +215,147 @@ document.getElementById('knob').addEventListener('click', function() {
     });
   });
 })();
+
+// -----------------------------------------------------------------------------
+// def iframe injection
+// -----------------------------------------------------------------------------
+function injectCustomScript(iframeWindow, iframeDocument) {
+  const script = iframeDocument.createElement('script');
+  script.textContent = `
+    (function() {
+      const pdfViewer = window.PDFViewerApplication.pdfViewer;
+      let lastTapTime = 0;
+      const DOUBLE_TAP_DELAY = 300; // Time interval recognized as double tap (ms)
+
+      // Event listeners need to be reapplied every time the page is rendered
+      window.PDFViewerApplication.eventBus.on('pagerendered', function(evt) {
+        const pageNumber = evt.pageNumber;
+        const pageView = pdfViewer.getPageView(pageNumber - 1);
+
+        if (pageView && pageView.textLayer && pageView.textLayer.div) {
+          const textLayerDiv = pageView.textLayer.div;
+          
+          textLayerDiv.addEventListener('touchend', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTapTime;
+
+            if (tapLength < DOUBLE_TAP_DELAY && tapLength > 0) {
+              // handle double tap
+              e.preventDefault();
+              e.stopPropagation();
+
+              const targetElement = e.target;
+              if (targetElement.nodeType === Node.TEXT_NODE) {
+                selectLine(targetElement.parentNode, document); 
+              } else if (targetElement.tagName === 'SPAN' && targetElement.closest('.textLayer')) {
+                selectLine(targetElement, document);
+              }
+              lastTapTime = 0; // Reset after double tap processing
+            } else {
+              lastTapTime = currentTime;
+            }
+          }, true); // Capture events in the capture phase
+        }
+      });
+
+      function selectLine(element, doc) {
+        if (!element || !element.closest('.textLayer')) {
+          return;
+        }
+
+        const selection = window.getSelection();
+        selection.removeAllRanges(); // Clear existing selection
+
+        const range = doc.createRange();
+        const targetRect = element.getBoundingClientRect();
+        const computedStyle = window.getComputedStyle(element);
+        const writingMode = computedStyle.writingMode;
+        const transform = computedStyle.transform;
+
+        // Determine whether it is vertical writing
+        // 1. If "writing-mode" starts with "vertical"
+        // 2. If "transform" includes "rotate(90deg)" or "rotate(-270deg)" (visually written vertically)
+        const isVerticalLayout = writingMode.startsWith('vertical') || 
+                                 transform.includes('rotate(90deg)') || 
+                                 transform.includes('rotate(-270deg)');
+
+        let startNode = element;
+        let endNode = element;
+
+        // Search the text backwards and decide the "startNode"
+        let prev = element.previousElementSibling;
+        while (prev) {
+          const prevRect = prev.getBoundingClientRect();
+          let isOnSameLine = false;
+
+          if (isVerticalLayout) {
+            // For vertical layout: Compare X coordinates
+            // Determine whether center lines overlap or significantly overlap
+            const targetCenterX = targetRect.x + targetRect.width / 2;
+            const prevCenterX = prevRect.x + prevRect.width / 2;
+            const overlapThreshold = Math.min(targetRect.width, prevRect.width) * 0.5; // Allow half the width
+
+            isOnSameLine = Math.abs(targetCenterX - prevCenterX) < overlapThreshold ||
+                           (prevRect.right > targetRect.x && prevRect.x < targetRect.right);
+          } else {
+            // For horizontal layout: Compare Y coordinates
+            // Determine whether center lines overlap or significantly overlap
+            const targetCenterY = targetRect.y + targetRect.height / 2;
+            const prevCenterY = prevRect.y + prevRect.height / 2;
+            const overlapThreshold = Math.min(targetRect.height, prevRect.height) * 0.5; // Allow half the height
+
+            isOnSameLine = Math.abs(targetCenterY - prevCenterY) < overlapThreshold ||
+                           (prevRect.bottom > targetRect.y && prevRect.y < targetRect.bottom);
+          }
+
+          if (isOnSameLine) {
+            startNode = prev;
+            prev = prev.previousElementSibling;
+          } else {
+            break;
+          }
+        }
+
+        // Search the text forwards and decide the "endNode"
+        let next = element.nextElementSibling;
+        while (next) {
+          const nextRect = next.getBoundingClientRect();
+          let isOnSameLine = false;
+
+          if (isVerticalLayout) {
+            // For vertical layout: Compare X coordinates
+            // Determine whether center lines overlap or significantly overlap
+            const targetCenterX = targetRect.x + targetRect.width / 2;
+            const nextCenterX = nextRect.x + nextRect.width / 2;
+            const overlapThreshold = Math.min(targetRect.width, nextRect.width) * 0.5; // Allow half the width
+
+            isOnSameLine = Math.abs(targetCenterX - nextCenterX) < overlapThreshold ||
+                           (nextRect.right > targetRect.x && nextRect.x < targetRect.right);
+          } else {
+            // For horizontal layout: Compare Y coordinates
+            // Determine whether center lines overlap or significantly overlap
+            const targetCenterY = targetRect.y + targetRect.height / 2;
+            const nextCenterY = nextRect.y + nextRect.height / 2;
+            const overlapThreshold = Math.min(targetRect.height, nextRect.height) * 0.5; // Allow half the height
+
+            isOnSameLine = Math.abs(targetCenterY - nextCenterY) < overlapThreshold ||
+                           (nextRect.bottom > targetRect.y && nextRect.y < targetRect.bottom);
+          }
+
+          if (isOnSameLine) {
+            endNode = next;
+            next = next.nextElementSibling;
+          } else {
+            break;
+          }
+        }
+        
+        // Set selection range
+        range.setStart(startNode, 0);
+        range.setEnd(endNode, endNode.childNodes.length);
+        selection.addRange(range);
+      }
+    })();
+  `;
+  iframeDocument.head.appendChild(script);
+}
