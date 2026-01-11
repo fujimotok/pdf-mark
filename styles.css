@@ -68,3 +68,8 @@ body, html {
     padding: 0 8px 8px 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
+
+.editor-toolbar {
+    white-space: nowrap;
+    overflow-x: auto;
+}
