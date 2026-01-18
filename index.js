@@ -216,6 +216,37 @@ document.getElementById('knob').addEventListener('click', function() {
   });
 })();
 
+// Listen for messages from the iframe to paste selected text
+window.addEventListener('message', (event) => {
+  // Check if the message comes from the expected origin for security
+  if (event.origin !== window.location.origin) {
+    console.warn('Received message from unexpected origin:', event.origin);
+    return;
+  }
+
+  if (event.data && event.data.type === 'pasteSelectedText') {
+    const textToPaste = event.data.text;
+    const currentContent = simplemde.value();
+    let newContent;
+
+    if (currentContent === '') {
+      // If editor is empty, just paste the text
+      newContent = textToPaste;
+    } else if (currentContent.endsWith('\n')) {
+      // If current content ends with a newline, append directly
+      newContent = currentContent + textToPaste;
+    } else {
+      // Otherwise, add a newline before pasting
+      newContent = currentContent + '\n' + textToPaste;
+    }
+
+    simplemde.value(newContent);
+    // Scroll to the end of the editor and place cursor there
+    const cm = simplemde.codemirror;
+    cm.setCursor(cm.lastLine(), cm.getLine(cm.lastLine()).length);
+  }
+});
+
 // -----------------------------------------------------------------------------
 // def iframe injection
 // -----------------------------------------------------------------------------
@@ -233,13 +264,15 @@ function injectCustomScript(iframeWindow, iframeDocument) {
 
         if (selection.isCollapsed) {
           if (lastSelectedText && lastSelectedText.trim() !== '') {
-            navigator.clipboard.writeText(lastSelectedText)
-              .then(() => {
-                console.log('Selected text copied to clipboard:', lastSelectedText);
-              })
-              .catch(err => {
-                console.error('Failed to copy selected text:', err);
-              });
+            // remove line breaks
+            const textWithoutNewlines = lastSelectedText.replace(/\\r?\\n|\\r/g, '');
+            // Send message to parent window and paste into SimpleMDE
+            window.parent.postMessage({
+              type: 'pasteSelectedText',
+              text: textWithoutNewlines
+            }, window.location.origin); // Specify exact origin for security
+
+            console.log('Selected text sent to parent for pasting:', textWithoutNewlines);
           }
           lastSelectedText = '';
         } else {

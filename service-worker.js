@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdf-mark-cache-v4';
+const CACHE_NAME = 'pdf-mark-cache-v5';
 
 const urlsToCache = [
   '/pdf-mark/',
